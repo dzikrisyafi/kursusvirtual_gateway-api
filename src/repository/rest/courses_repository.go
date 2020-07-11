@@ -9,7 +9,7 @@ import (
 	"github.com/dzikrisyafi/kursusvirtual_gateway-api/src/domain/cohort"
 	"github.com/dzikrisyafi/kursusvirtual_gateway-api/src/domain/enrolls"
 	"github.com/dzikrisyafi/kursusvirtual_utils-go/rest_errors"
-	"github.com/golang-restclient/rest"
+	"github.com/mercadolibre/golang-restclient/rest"
 )
 
 var (
