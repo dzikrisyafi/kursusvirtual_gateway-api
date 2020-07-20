@@ -16,24 +16,28 @@ var (
 )
 
 func StartApplication() {
-	router.Use(cors.Default())
 	enrolls := http.NewEnrollsHandler(enrolls.NewService(rest.NewRestUsersRepository(), rest.NewRestCoursesRepository()))
 	cohorts := http.NewCohortHandler(cohort.NewService(rest.NewRestUsersRepository(), rest.NewRestCoursesRepository()))
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"OPTIONS", "GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:    []string{"Origin", "Content-Type", "Content-Length"},
+	}))
 
 	enrollsGroup := router.Group("/enrolls")
 	enrollsGroup.Use(middleware.Auth())
 	{
-		router.POST("/", enrolls.Create)
-		router.PUT("/:enroll_id", enrolls.Update)
-		router.DELETE("/:enroll_id", enrolls.Delete)
+		enrollsGroup.POST("/", enrolls.Create)
+		enrollsGroup.PUT("/:enroll_id", enrolls.Update)
+		enrollsGroup.DELETE("/:enroll_id", enrolls.Delete)
 	}
 
 	cohortsGroup := router.Group("/cohorts")
 	cohortsGroup.Use(middleware.Auth())
 	{
-		router.POST("/", cohorts.Create)
-		router.PUT("/:cohort_id", cohorts.Update)
-		router.DELETE("/:cohort_id", cohorts.Delete)
+		cohortsGroup.POST("/", cohorts.Create)
+		cohortsGroup.PUT("/:cohort_id", cohorts.Update)
+		cohortsGroup.DELETE("/:cohort_id", cohorts.Delete)
 	}
 
 	logger.Info("start the application...")
